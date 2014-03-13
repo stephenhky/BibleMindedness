@@ -19,3 +19,9 @@ parse.locations<-function(citystr) {
   }
   locations
 }
+
+mean_geocode<-function(citystr) {
+  locations<-parse.locations(citystr)
+  geolocations<-geocode(locations)
+  data.frame(lon=mean(geolocations$lon), lat=mean(geolocations$lat))
+}
