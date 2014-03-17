@@ -1,7 +1,9 @@
 library(ggmap)
 library(stringr)
 
-usmap<-get_map('United States', zoom=4)
+get_usmap<-function() {
+  usmap<-get_map('United States', zoom=4)
+}
 
 parse.locations<-function(citystr, sep='/') {
   #regex.results<-gregexpr('([A-Z])([a-z]+)(, [A-Z]{2})?', citystr)[[1]]
@@ -26,4 +28,20 @@ mean_geocode<-function(citystr) {
   locations<-parse.locations(citystr)
   geolocations<-geocode(locations)
   data.frame(lon=mean(geolocations$lon), lat=mean(geolocations$lat))
+}
+
+get_clusters<-function(biblemindednesses) {
+  kmeans(biblemindednesses, c(10, 20, 30, 38, 45), iter.max=1000)
+}
+
+plot_cluster_biblemindedness<-function(citydata) {
+  clustering<-get_clusters(citydata$Biblemindedness)
+  color.codes<-c('#000000', '#000033', '#000066', '#000099', '#0000CC', '#0000FF')
+  mapplot<-get_usmap()
+  for (i in 1:nrow(citydata)) {
+    cluster.type<-clustering[[1]][[i]]
+    mapplot<-mapplot+geom_point(aes(colour=color.codes[[cluster.type]]),
+                                data=mean_geocode(citydata$City[[i]]))
+  }
+  mapplot
 }
