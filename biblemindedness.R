@@ -30,18 +30,33 @@ mean_geocode<-function(citystr) {
   data.frame(lon=mean(geolocations$lon), lat=mean(geolocations$lat))
 }
 
+mean_geocodes<-function(metros) {
+  lons<-c()
+  lats<-c()
+  for (metro in metros) {
+    coordinates<-mean_geocode(metro)
+    lons<-append(lons, coordinates$lon)
+    lats<-append(lats, coordinates$lat)
+  }
+  data.frame(lon=lons, lat=lats)
+}
+
 get_clusters<-function(biblemindednesses) {
   kmeans(biblemindednesses, c(10, 20, 30, 38, 45), iter.max=1000)
 }
 
 plot_cluster_biblemindedness<-function(citydata) {
   clustering<-get_clusters(citydata$Biblemindedness)
-  color.codes<-c('#000000', '#000033', '#000066', '#000099', '#0000CC', '#0000FF')
-  mapplot<-get_usmap()
-  for (i in 1:nrow(citydata)) {
-    cluster.type<-clustering[[1]][[i]]
-    mapplot<-mapplot+geom_point(aes(colour=color.codes[[cluster.type]]),
-                                data=mean_geocode(citydata$City[[i]]))
+  color.codes<-c('#000000', '#000044', '#000088', '#0000CC', '#0000FF')
+  mapplot<-ggmap(get_usmap())
+  coordinates.set<-c()
+  for (i in 1:length(color.codes)) {
+    coordinates<-mean_geocodes(citydata[ clustering[[1]]==i, ]$City)
+    coordinates.set<-append(coordinates.set, coordinates)
   }
-  mapplot
+  ggmap(get_usmap())+geom_point(aes(colour=color.codes[[1]]), data=coordinates.set[[1]])+
+    geom_point(aes(colour=color.codes[[2]]), data=coordinates.set[[2]])+
+    geom_point(aes(colour=color.codes[[3]]), data=coordinates.set[[3]])+
+    geom_point(aes(colour=color.codes[[4]]), data=coordinates.set[[4]])+
+    geom_point(aes(colour=color.codes[[5]]), data=coordinates.set[[5]])
 }
