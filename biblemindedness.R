@@ -44,19 +44,3 @@ mean_geocodes<-function(metros) {
 get_clusters<-function(biblemindednesses) {
   kmeans(biblemindednesses, c(10, 20, 30, 38, 45), iter.max=1000)
 }
-
-plot_cluster_biblemindedness<-function(citydata) {
-  clustering<-get_clusters(citydata$Biblemindedness)
-  color.codes<-c('#000000', '#000044', '#000088', '#0000CC', '#0000FF')
-  mapplot<-ggmap(get_usmap())
-  coordinates.set<-c()
-  for (i in 1:length(color.codes)) {
-    coordinates<-mean_geocodes(citydata[ clustering[[1]]==i, ]$City)
-    coordinates.set<-append(coordinates.set, coordinates)
-  }
-  ggmap(get_usmap())+geom_point(aes(colour=color.codes[[1]]), data=coordinates.set[[1]])+
-    geom_point(aes(colour=color.codes[[2]]), data=coordinates.set[[2]])+
-    geom_point(aes(colour=color.codes[[3]]), data=coordinates.set[[3]])+
-    geom_point(aes(colour=color.codes[[4]]), data=coordinates.set[[4]])+
-    geom_point(aes(colour=color.codes[[5]]), data=coordinates.set[[5]])
-}
