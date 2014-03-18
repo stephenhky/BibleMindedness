@@ -12,14 +12,15 @@ for (i in 1:length(color.codes)) {
 }
 
 bible_map<-ggmap(get_usmap())
-bible_map<-bible_map+geom_point(aes(colour=color.codes[[1]]), 
-                                data=data.frame(lon=coordinates.set[1]$lon, lat=coordinates.set[2]$lat))
-bible_map<-bible_map+geom_point(aes(colour=color.codes[[2]]), 
+bible_map<-bible_map+geom_point(aes(colour=1, color='Bible-Mindedness'), 
+                                data=data.frame(lon=coordinates.set[1]$lon, lat=coordinates.set[2]$lat),
+                                show_guide=TRUE)
+bible_map<-bible_map+geom_point(aes(colour=2), 
                                 data=data.frame(lon=coordinates.set[3]$lon, lat=coordinates.set[4]$lat))
-bible_map<-bible_map+geom_point(aes(colour=color.codes[[3]]), 
+bible_map<-bible_map+geom_point(aes(colour=3), 
                                 data=data.frame(lon=coordinates.set[5]$lon, lat=coordinates.set[6]$lat))
-bible_map<-bible_map+geom_point(aes(colour=color.codes[[4]]), 
+bible_map<-bible_map+geom_point(aes(colour=4), 
                                 data=data.frame(lon=coordinates.set[7]$lon, lat=coordinates.set[8]$lat))
-bible_map<-bible_map+geom_point(aes(colour=color.codes[[5]]), 
+bible_map<-bible_map+geom_point(aes(colour=5), 
                                 data=data.frame(lon=coordinates.set[9]$lon, lat=coordinates.set[10]$lat))
-bible_map
+bible_map+labs(colour='Bible-mindedness')
